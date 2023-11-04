@@ -1,11 +1,12 @@
 package uz.ollobergan.apicollector.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@ToString
 public class RawMessageDto {
-
     private String messageType;
-    private String object;
-
+    private byte[] object;
 }
