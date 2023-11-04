@@ -10,6 +10,9 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration class for RabbitMQ
+ */
 @Configuration
 public class RabbitMqConfig {
     @Value("${rabbitmq.queue.name}")
@@ -36,22 +39,42 @@ public class RabbitMqConfig {
     @Value("${rabbitmq.reply.timeout}")
     private Integer replyTimeout;
 
+    /**
+     * Create queue
+     */
     @Bean
     public Queue queue() {
         return new Queue(queueName, false);
     }
+
+    /**
+     * Create exchange
+     */
     @Bean
     public DirectExchange exchange() {
         return new DirectExchange(exchange);
     }
+
+    /**
+     * Binding queue to exchange
+     */
     @Bean
     public Binding binding(Queue queue, DirectExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(routingkey);
     }
+
+    /**
+     * Message convert configuration
+     */
     @Bean
     public Jackson2JsonMessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
+
+
+    /**
+     * RabbitMQ credentials setup
+     */
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
@@ -61,6 +84,10 @@ public class RabbitMqConfig {
         connectionFactory.setPassword(password);
         return connectionFactory;
     }
+
+    /**
+     * Default configuration setup
+     */
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -73,6 +100,10 @@ public class RabbitMqConfig {
         rabbitTemplate.setRoutingKey(routingkey);
         return rabbitTemplate;
     }
+
+    /**
+     * RabbitMQ admin configuration
+     */
     @Bean
     public AmqpAdmin amqpAdmin() {
         return new RabbitAdmin(connectionFactory());
