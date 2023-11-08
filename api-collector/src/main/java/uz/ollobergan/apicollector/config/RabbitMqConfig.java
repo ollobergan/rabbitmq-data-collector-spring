@@ -10,6 +10,9 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Configuration class for RabbitMQ
  */
@@ -17,12 +20,20 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
     @Value("${rabbitmq.queue.name}")
     private String queueName;
+    @Value("${rabbitmq.queue.name_error}")
+    private String queueNameError;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
+    @Value("${rabbitmq.exchange.name_error}")
+    private String exchangeError;
+
     @Value("${rabbitmq.routing.key.name}")
     private String routingkey;
+
+    @Value("${rabbitmq.routing.key.name_error}")
+    private String routingkeyError;
 
     @Value("${rabbitmq.username}")
     private String username;
@@ -44,7 +55,14 @@ public class RabbitMqConfig {
      */
     @Bean
     public Queue queue() {
-        return new Queue(queueName, false);
+        Map<String, Object> args = new HashMap<>();
+        args.put("x-dead-letter-exchange", exchangeError); //error exch
+        args.put("x-dead-letter-routing-key", routingkeyError);
+        return new Queue(queueName, false, false, false, args);
+    }
+    @Bean
+    public Queue queueError() {
+        return new Queue(queueNameError, false, false, false);
     }
 
     /**
@@ -54,6 +72,10 @@ public class RabbitMqConfig {
     public DirectExchange exchange() {
         return new DirectExchange(exchange);
     }
+    @Bean
+    public DirectExchange exchangeError() {
+        return new DirectExchange(exchangeError);
+    }
 
     /**
      * Binding queue to exchange
@@ -61,6 +83,11 @@ public class RabbitMqConfig {
     @Bean
     public Binding binding(Queue queue, DirectExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(routingkey);
+    }
+
+    @Bean
+    public Binding bindingError() {
+        return BindingBuilder.bind(queueError()).to(exchangeError()).with(routingkeyError);
     }
 
     /**
