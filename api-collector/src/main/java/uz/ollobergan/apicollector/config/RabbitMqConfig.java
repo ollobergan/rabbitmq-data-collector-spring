@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uz.ollobergan.apicollector.constants.RabbitConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,22 +19,6 @@ import java.util.Map;
  */
 @Configuration
 public class RabbitMqConfig {
-    @Value("${rabbitmq.queue.name}")
-    private String queueName;
-    @Value("${rabbitmq.queue.name_error}")
-    private String queueNameError;
-
-    @Value("${rabbitmq.exchange.name}")
-    private String exchange;
-
-    @Value("${rabbitmq.exchange.name_error}")
-    private String exchangeError;
-
-    @Value("${rabbitmq.routing.key.name}")
-    private String routingkey;
-
-    @Value("${rabbitmq.routing.key.name_error}")
-    private String routingkeyError;
 
     @Value("${rabbitmq.username}")
     private String username;
@@ -56,13 +41,13 @@ public class RabbitMqConfig {
     @Bean
     public Queue queue() {
         Map<String, Object> args = new HashMap<>();
-        args.put("x-dead-letter-exchange", exchangeError); //error exch
-        args.put("x-dead-letter-routing-key", routingkeyError);
-        return new Queue(queueName, false, false, false, args);
+        args.put("x-dead-letter-exchange", RabbitConstants.RABBIT_MAIN_EXCHANGE_ERROR); //error exch
+        args.put("x-dead-letter-routing-key", RabbitConstants.RABBIT_MAIN_ROUTING_KEY_ERROR);
+        return new Queue(RabbitConstants.RABBIT_MAIN_QUEUE, false, false, false, args);
     }
     @Bean
     public Queue queueError() {
-        return new Queue(queueNameError, false, false, false);
+        return new Queue(RabbitConstants.RABBIT_MAIN_QUEUE_ERROR, false, false, false);
     }
 
     /**
@@ -70,11 +55,11 @@ public class RabbitMqConfig {
      */
     @Bean
     public DirectExchange exchange() {
-        return new DirectExchange(exchange);
+        return new DirectExchange(RabbitConstants.RABBIT_MAIN_EXCHANGE);
     }
     @Bean
     public DirectExchange exchangeError() {
-        return new DirectExchange(exchangeError);
+        return new DirectExchange(RabbitConstants.RABBIT_MAIN_EXCHANGE_ERROR);
     }
 
     /**
@@ -82,12 +67,12 @@ public class RabbitMqConfig {
      */
     @Bean
     public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingkey);
+        return BindingBuilder.bind(queue).to(exchange).with(RabbitConstants.RABBIT_MAIN_ROUTING_KEY);
     }
 
     @Bean
     public Binding bindingError() {
-        return BindingBuilder.bind(queueError()).to(exchangeError()).with(routingkeyError);
+        return BindingBuilder.bind(queueError()).to(exchangeError()).with(RabbitConstants.RABBIT_MAIN_ROUTING_KEY_ERROR);
     }
 
     /**
@@ -118,13 +103,13 @@ public class RabbitMqConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setDefaultReceiveQueue(queueName);
+        rabbitTemplate.setDefaultReceiveQueue(RabbitConstants.RABBIT_MAIN_QUEUE);
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
         rabbitTemplate.setReplyAddress(queue().getName());
         rabbitTemplate.setReplyTimeout(replyTimeout);
         rabbitTemplate.setUseDirectReplyToContainer(false);
-        rabbitTemplate.setExchange(exchange);
-        rabbitTemplate.setRoutingKey(routingkey);
+        rabbitTemplate.setExchange(RabbitConstants.RABBIT_MAIN_EXCHANGE);
+        rabbitTemplate.setRoutingKey(RabbitConstants.RABBIT_MAIN_ROUTING_KEY);
         return rabbitTemplate;
     }
 
