@@ -19,9 +19,6 @@ public class DistributorHandler {
      */
     @RabbitListener(queues = RabbitMqConstants.MAIN_QUEUE)
     public void listenMessages(Message message) throws Exception {
-        if (1==1){
-            throw new Exception();
-        }
         //Get rabbit message body
         String messageBody = new String(message.getBody(),"UTF-8");
         //Decode message to DTO
