@@ -1,15 +1,19 @@
-package uz.ollobergan.apicollector.config;
+package uz.ollobergan.appdistributor.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.retry.RepublishMessageRecoverer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uz.ollobergan.apicollector.constants.RabbitMqConstants;
+import org.springframework.retry.interceptor.RetryOperationsInterceptor;
+import uz.ollobergan.appdistributor.constants.RabbitMqConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -116,5 +120,21 @@ public class RabbitMqConfig {
     @Bean
     public AmqpAdmin amqpAdmin() {
         return new RabbitAdmin(connectionFactory());
+    }
+
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory() {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory());
+        factory.setConcurrentConsumers(1);
+        factory.setMaxConcurrentConsumers(3);
+        factory.setAdviceChain(retryInterceptor());
+        return factory;
+    }
+
+    @Bean
+    public RetryOperationsInterceptor retryInterceptor() {
+        RepublishMessageRecoverer recoverer = new RepublishMessageRecoverer(new RabbitTemplate(connectionFactory()), RabbitMqConstants.RABBIT_MAIN_EXCHANGE_ERROR, RabbitMqConstants.RABBIT_MAIN_ROUTING_KEY_ERROR);
+        return RetryInterceptorBuilder.stateless().maxAttempts(1).recoverer(recoverer).build();
     }
 }

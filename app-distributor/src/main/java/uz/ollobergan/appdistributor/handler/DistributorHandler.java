@@ -11,13 +11,13 @@ import uz.ollobergan.appdistributor.helper.CompressHelper;
 public class DistributorHandler {
 
     /**
-     * Main listener for data collectot.
+     * Main listener for data collector.
      * This method distribute messages to queues.
      *
      * @param message
      * @throws Exception
      */
-    @RabbitListener(queues = RabbitMqConstants.MAIN_QUEUE)
+    @RabbitListener(queues = RabbitMqConstants.RABBIT_MAIN_QUEUE, containerFactory = "rabbitListenerContainerFactory")
     public void listenMessages(Message message) throws Exception {
         //Get rabbit message body
         String messageBody = new String(message.getBody(),"UTF-8");

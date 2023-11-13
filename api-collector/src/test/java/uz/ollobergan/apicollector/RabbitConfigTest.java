@@ -11,7 +11,7 @@ import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import uz.ollobergan.apicollector.config.RabbitMqConfig;
-import uz.ollobergan.apicollector.constants.RabbitConstants;
+import uz.ollobergan.apicollector.constants.RabbitMqConstants;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,11 +53,11 @@ public class RabbitConfigTest {
         assertNotNull(binding);
         assertNotNull(bindingError);
 
-        assertTrue(rabbitAdmin.getQueueProperties(RabbitConstants.RABBIT_MAIN_QUEUE).size() > 0);
-        assertTrue(rabbitAdmin.getQueueProperties(RabbitConstants.RABBIT_MAIN_QUEUE_ERROR).size() > 0);
+        assertTrue(rabbitAdmin.getQueueProperties(RabbitMqConstants.RABBIT_MAIN_QUEUE).size() > 0);
+        assertTrue(rabbitAdmin.getQueueProperties(RabbitMqConstants.RABBIT_MAIN_QUEUE_ERROR).size() > 0);
 
-        assertTrue(binding.getRoutingKey() == RabbitConstants.RABBIT_MAIN_ROUTING_KEY);
-        assertTrue(bindingError.getRoutingKey() == RabbitConstants.RABBIT_MAIN_ROUTING_KEY_ERROR);
+        assertTrue(binding.getRoutingKey() == RabbitMqConstants.RABBIT_MAIN_ROUTING_KEY);
+        assertTrue(bindingError.getRoutingKey() == RabbitMqConstants.RABBIT_MAIN_ROUTING_KEY_ERROR);
 
         assertTrue(exchange.isDurable());
         assertTrue(exchangeError.isDurable());
