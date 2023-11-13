@@ -157,8 +157,25 @@ public class RabbitMqConfig {
     }
 
     @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactoryWefoReport() {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory());
+        factory.setConcurrentConsumers(1);
+        factory.setMaxConcurrentConsumers(3);
+        factory.setAdviceChain(retryInterceptorWefoReport());
+        return factory;
+    }
+
+    @Bean
     public RetryOperationsInterceptor retryInterceptor() {
         RepublishMessageRecoverer recoverer = new RepublishMessageRecoverer(new RabbitTemplate(connectionFactory()), RabbitMqConstants.RABBIT_MAIN_EXCHANGE_ERROR, RabbitMqConstants.RABBIT_MAIN_ROUTING_KEY_ERROR);
+        return RetryInterceptorBuilder.stateless().maxAttempts(1).recoverer(recoverer).build();
+    }
+
+
+    @Bean
+    public RetryOperationsInterceptor retryInterceptorWefoReport() {
+        RepublishMessageRecoverer recoverer = new RepublishMessageRecoverer(new RabbitTemplate(connectionFactory()), RabbitMqConstants.RABBIT_WEFO_REPORT_EXCHANGE_ERROR, RabbitMqConstants.RABBIT_WEFO_REPORT_ROUTING_KEY_ERROR);
         return RetryInterceptorBuilder.stateless().maxAttempts(1).recoverer(recoverer).build();
     }
 }
