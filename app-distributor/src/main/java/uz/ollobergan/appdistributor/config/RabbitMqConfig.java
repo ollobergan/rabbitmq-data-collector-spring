@@ -51,6 +51,15 @@ public class RabbitMqConfig {
         return new Queue(RabbitMqConstants.RABBIT_MAIN_QUEUE_ERROR, false, false, false);
     }
 
+    @Bean
+    public Queue wefoReportQueue() {
+        return new Queue(RabbitMqConstants.RABBIT_WEFO_REPORT_QUEUE, false, false, false);
+    }
+    @Bean
+    public Queue wefoReportQueueError() {
+        return new Queue(RabbitMqConstants.RABBIT_WEFO_REPORT_QUEUE_ERROR, false, false, false);
+    }
+
     /**
      * Create exchange
      */
@@ -63,6 +72,15 @@ public class RabbitMqConfig {
         return new DirectExchange(RabbitMqConstants.RABBIT_MAIN_EXCHANGE_ERROR);
     }
 
+    @Bean
+    public DirectExchange wefoReportExchange() {
+        return new DirectExchange(RabbitMqConstants.RABBIT_WEFO_REPORT_EXCHANGE);
+    }
+
+    @Bean
+    public DirectExchange wefoReportExchangeError() {
+        return new DirectExchange(RabbitMqConstants.RABBIT_WEFO_REPORT_EXCHANGE_ERROR);
+    }
     /**
      * Binding queue to exchange
      */
@@ -74,6 +92,16 @@ public class RabbitMqConfig {
     @Bean
     public Binding bindingError() {
         return BindingBuilder.bind(queueError()).to(exchangeError()).with(RabbitMqConstants.RABBIT_MAIN_ROUTING_KEY_ERROR);
+    }
+
+    @Bean
+    public Binding bindingWefoReport() {
+        return BindingBuilder.bind(wefoReportQueue()).to(wefoReportExchange()).with(RabbitMqConstants.RABBIT_WEFO_REPORT_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding bindingWefoReportError() {
+        return BindingBuilder.bind(wefoReportQueueError()).to(wefoReportExchangeError()).with(RabbitMqConstants.RABBIT_WEFO_REPORT_ROUTING_KEY_ERROR);
     }
 
     /**
@@ -109,8 +137,6 @@ public class RabbitMqConfig {
         rabbitTemplate.setReplyAddress(queue().getName());
         rabbitTemplate.setReplyTimeout(replyTimeout);
         rabbitTemplate.setUseDirectReplyToContainer(false);
-        rabbitTemplate.setExchange(RabbitMqConstants.RABBIT_MAIN_EXCHANGE);
-        rabbitTemplate.setRoutingKey(RabbitMqConstants.RABBIT_MAIN_ROUTING_KEY);
         return rabbitTemplate;
     }
 

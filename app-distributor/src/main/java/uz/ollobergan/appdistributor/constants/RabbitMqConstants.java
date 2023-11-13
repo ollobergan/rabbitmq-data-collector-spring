@@ -15,11 +15,15 @@ public class RabbitMqConstants {
     //------------------------------------------------------------------------------------------------------------------
     public static final String RABBIT_MAIN_EXCHANGE = "collector_exchange";
     public static final String RABBIT_MAIN_EXCHANGE_ERROR = "collector_exchange_error";
+    public static final String RABBIT_WEFO_REPORT_EXCHANGE = "wefo_report_exchange";
+    public static final String RABBIT_WEFO_REPORT_EXCHANGE_ERROR = "wefo_report_exchange_error";
 
     //------------------------------------------------------------------------------------------------------------------
     // ROUTING KEYS
     //------------------------------------------------------------------------------------------------------------------
     public static final String RABBIT_MAIN_ROUTING_KEY = "collector_routing_key";
     public static final String RABBIT_MAIN_ROUTING_KEY_ERROR = "collector_routing_key_error";
+    public static final String RABBIT_WEFO_REPORT_ROUTING_KEY = "wefo_report_routing_key";
+    public static final String RABBIT_WEFO_REPORT_ROUTING_KEY_ERROR = "wefo_report_routing_key_error";
 
 }
