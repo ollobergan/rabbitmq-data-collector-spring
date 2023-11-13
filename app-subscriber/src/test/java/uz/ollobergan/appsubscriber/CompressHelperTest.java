@@ -1,9 +1,9 @@
-package uz.ollobergan.appdistributor;
+package uz.ollobergan.appsubscriber;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
-import uz.ollobergan.appdistributor.dto.RawMessageDto;
-import uz.ollobergan.appdistributor.helper.CompressHelper;
+import uz.ollobergan.appsubscriber.dto.RawMessageDto;
+import uz.ollobergan.appsubscriber.helper.CompressHelper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CompressHelperTest   {

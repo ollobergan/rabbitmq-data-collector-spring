@@ -1,4 +1,4 @@
-package uz.ollobergan.appdistributor;
+package uz.ollobergan.appsubscriber;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import uz.ollobergan.appdistributor.config.RabbitMqConfig;
-import uz.ollobergan.appdistributor.constants.RabbitMqConstants;
+import uz.ollobergan.appsubscriber.config.RabbitMqConfig;
+import uz.ollobergan.appsubscriber.constants.RabbitMqConstants;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

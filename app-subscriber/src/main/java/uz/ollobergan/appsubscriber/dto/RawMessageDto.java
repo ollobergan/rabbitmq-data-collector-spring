@@ -1,4 +1,4 @@
-package uz.ollobergan.appdistributor.dto;
+package uz.ollobergan.appsubscriber.dto;
 
 
 import lombok.Data;

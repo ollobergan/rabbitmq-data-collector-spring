@@ -1,4 +1,4 @@
-package uz.ollobergan.appdistributor.helper;
+package uz.ollobergan.appsubscriber.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;

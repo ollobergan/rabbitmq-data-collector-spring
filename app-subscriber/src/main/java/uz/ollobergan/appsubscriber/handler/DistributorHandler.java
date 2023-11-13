@@ -1,14 +1,14 @@
-package uz.ollobergan.appdistributor.handler;
+package uz.ollobergan.appsubscriber.handler;
 
 import jakarta.annotation.Resource;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import uz.ollobergan.appdistributor.constants.RawMessageTypes;
-import uz.ollobergan.appdistributor.constants.RabbitMqConstants;
-import uz.ollobergan.appdistributor.dto.RawMessageDto;
-import uz.ollobergan.appdistributor.helper.CompressHelper;
+import uz.ollobergan.appsubscriber.constants.RawMessageTypes;
+import uz.ollobergan.appsubscriber.constants.RabbitMqConstants;
+import uz.ollobergan.appsubscriber.dto.RawMessageDto;
+import uz.ollobergan.appsubscriber.helper.CompressHelper;
 
 @Service
 public class DistributorHandler {

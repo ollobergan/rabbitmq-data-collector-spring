@@ -1,4 +1,4 @@
-package uz.ollobergan.appdistributor.config;
+package uz.ollobergan.appsubscriber.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
@@ -13,7 +13,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
-import uz.ollobergan.appdistributor.constants.RabbitMqConstants;
+import uz.ollobergan.appsubscriber.constants.RabbitMqConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,9 +36,7 @@ public class RabbitMqConfig {
     @Value("${rabbitmq.virtualhost}")
     private String virtualHost;
 
-    @Value("${rabbitmq.reply.timeout}")
-    private Integer replyTimeout;
-
+    private final Integer replyTimeout = 60000;
     /**
      * Create queue
      */
