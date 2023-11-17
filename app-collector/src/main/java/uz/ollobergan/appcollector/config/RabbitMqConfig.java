@@ -1,19 +1,19 @@
-package uz.ollobergan.appsubscriber.config;
+package uz.ollobergan.appcollector.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.retry.RepublishMessageRecoverer;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
-import uz.ollobergan.appsubscriber.constants.RabbitMqConstants;
+import uz.ollobergan.appcollector.constants.RabbitMqConstants;
 
 /**
  * Configuration class for RabbitMQ
@@ -61,6 +61,7 @@ public class RabbitMqConfig {
     /**
      * Binding queue to exchange
      */
+
     @Bean
     public Binding bindingWefoReport() {
         return BindingBuilder.bind(wefoReportQueue()).to(wefoReportExchange()).with(RabbitMqConstants.RABBIT_WEFO_REPORT_ROUTING_KEY);
@@ -99,6 +100,7 @@ public class RabbitMqConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setDefaultReceiveQueue(RabbitMqConstants.RABBIT_MAIN_QUEUE);
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
         rabbitTemplate.setReplyTimeout(replyTimeout);
         rabbitTemplate.setUseDirectReplyToContainer(false);

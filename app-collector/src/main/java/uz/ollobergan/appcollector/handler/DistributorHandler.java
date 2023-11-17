@@ -1,14 +1,14 @@
-package uz.ollobergan.appsubscriber.handler;
+package uz.ollobergan.appcollector.handler;
 
 import jakarta.annotation.Resource;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import uz.ollobergan.appsubscriber.constants.RawMessageTypes;
-import uz.ollobergan.appsubscriber.constants.RabbitMqConstants;
-import uz.ollobergan.appsubscriber.dto.RawMessageDto;
-import uz.ollobergan.appsubscriber.helper.CompressHelper;
+import uz.ollobergan.appcollector.constants.RawMessageTypes;
+import uz.ollobergan.appcollector.constants.RabbitMqConstants;
+import uz.ollobergan.appcollector.dto.RawMessageDto;
+import uz.ollobergan.appcollector.helper.CompressHelper;
 
 @Service
 public class DistributorHandler {
@@ -29,6 +29,11 @@ public class DistributorHandler {
         String messageBody = new String(message.getBody(),"UTF-8");
         //Decode message to DTO
         RawMessageDto rawMessageDto = CompressHelper.DecodeToDto(messageBody,RawMessageDto.class);
+
+        seporateMessages(rawMessageDto);
+    }
+
+    private void seporateMessages(RawMessageDto rawMessageDto) throws Exception{
         switch (rawMessageDto.getMessageType()){
             case RawMessageTypes.MESSAGE_WEFO_REPORT: sendWefoReportToQueue(rawMessageDto); break;
             default: throw new Exception("Wrong message type!");
